@@ -8,6 +8,9 @@
 # libphutil
 /src/.phutil_module_cache
 
+# Win32 support
+/support/win32/arc.exe
+
 # User extensions
 /externals/includes/*
 /src/extensions/*
