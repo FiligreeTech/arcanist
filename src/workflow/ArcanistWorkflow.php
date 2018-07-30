@@ -2044,6 +2044,13 @@ abstract class ArcanistWorkflow extends Phobject {
 
   protected function getModernLintDictionary(array $map) {
     $map = $this->getModernCommonDictionary($map);
+    if (phutil_is_windows()) {
+      // Normalize path separators
+      if (isset($map['path'])) {
+        $map['path'] = str_replace('\\', '/', $map['path']);
+      }
+    }
+
     return $map;
   }
 
