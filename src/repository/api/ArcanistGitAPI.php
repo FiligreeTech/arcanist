@@ -28,20 +28,7 @@ final class ArcanistGitAPI extends ArcanistRepositoryAPI {
   public function execPassthru($pattern /* , ... */) {
     $args = func_get_args();
 
-    static $git = null;
-    if ($git === null) {
-      if (phutil_is_windows()) {
-        // NOTE: On Windows, phutil_passthru() uses 'bypass_shell' because
-        // everything goes to hell if we don't. We must provide an absolute
-        // path to Git for this to work properly.
-        $git = Filesystem::resolveBinary('git');
-        $git = csprintf('%s', $git);
-      } else {
-        $git = 'git';
-      }
-    }
-
-    $args[0] = $git.' '.$args[0];
+    $args[0] = 'git '.$args[0];
 
     return call_user_func_array('phutil_passthru', $args);
   }
@@ -163,17 +150,10 @@ final class ArcanistGitAPI extends ArcanistRepositoryAPI {
         $this->getBaseCommit());
     }
 
-    // NOTE: Windows escaping of "%" symbols apparently is inherently broken;
-    // when passed through escapeshellarg() they are replaced with spaces.
-
-    // TODO: Learn how cmd.exe works and find some clever workaround?
-
     // NOTE: If we use "%x00", output is truncated in Windows.
 
     list($info) = $this->execxLocal(
-      phutil_is_windows()
-        ? 'log %C --format=%C --'
-        : 'log %C --format=%s --',
+      'log %C --format=%s --',
       $against,
       // NOTE: "%B" is somewhat new, use "%s%n%n%b" instead.
       '%H%x01%T%x01%P%x01%at%x01%an%x01%aE%x01%s%x01%s%n%n%b%x02');
@@ -610,9 +590,7 @@ final class ArcanistGitAPI extends ArcanistRepositoryAPI {
       $stdout = $this->getHashFromFromSVNRevisionNumber($match[1]);
     } else {
       list($stdout) = $this->execxLocal(
-        phutil_is_windows()
-        ? 'show -s --format=%C %s --'
-        : 'show -s --format=%s %s --',
+        'show -s --format=%s %s --',
         '%H',
         $string);
     }
