@@ -351,11 +351,13 @@ abstract class ArcanistExternalLinter extends ArcanistFutureLinter {
     $this->checkBinaryConfiguration();
 
     $interpreter = null;
+    $binary = null;
     if ($this->shouldUseInterpreter()) {
-      $interpreter = $this->getInterpreter();
+      $interpreter = Filesystem::resolveBinary($this->getInterpreter());
+      $binary = $this->getBinary();
+    } else {
+      $binary = Filesystem::resolveBinary($this->getBinary());
     }
-
-    $binary = $this->getBinary();
 
     if ($interpreter) {
       $bin = csprintf('%s %s', $interpreter, $binary);
