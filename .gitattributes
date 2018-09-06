@@ -1,0 +1,13 @@
+# Arcanist uses some multi-line string literals whose line endings are expected
+# to be LF.
+*.php eol=lf
+
+# Linter test cases
+src/lint/linter/__tests__/*/** -text
+src/lint/linter/xhpast/rules/__tests__/*/** -text
+src/lint/renderer/__tests__/data/** -text
+src/parser/__tests__/*/** -text
+src/repository/parser/__tests__/*/** -text
+
+# This one needs CRLF on Windows, LF otherwise.
+src/parser/__tests__/bundle/** text
